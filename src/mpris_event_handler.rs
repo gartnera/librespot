@@ -372,8 +372,17 @@ impl MprisPlayerService {
     // If `self.can_pause` is `false`, attempting to call this method should have no effect and
     // raise an error.
     async fn play_pause(&self) {
-        // ignore for now
-        // TODO: implement
+        match self.playback_status {
+            PlaybackStatus::Playing => {
+                self.pause().await;
+            }
+            PlaybackStatus::Paused  => {
+                self.play().await;
+            },
+            PlaybackStatus::Stopped => {
+                warn!("Cannot play, playback is stopped");
+            }
+        }
     }
 
     // Stops playback.
